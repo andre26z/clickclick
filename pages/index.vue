@@ -48,7 +48,7 @@
 				v-for="project in store.filteredAndSortedProjects"
 				:key="project.id"
 				:project="project"
-				:search-term="currentSearchTerm"
+				:search-term="store.searchTerm"
 				@toggle-favorite="handleToggleFavorite"
 				@delete-project="promptDeleteProject"
 			/>
@@ -73,48 +73,31 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, computed, onMounted, watch } from 'vue'; // Adicionado watch
+	import { ref, onMounted } from 'vue';
 	import ProjectCard from '~/components/ProjectCard.vue';
 	import ConfirmationModal from '~/components/ConfirmationModal.vue';
-	import { useProjectsStore } from '~/stores/project'; // Importa a store
-	import type { Project } from '~/types/project'; // Mantém a interface para tipar projectToDelete
 
-	const store = useProjectsStore(); // Instancia a store
-	const route = useRoute(); // Para pegar query de busca
+	import { useProjectsStore } from '~/stores/project';
+	import type { Project } from '~/types/project';
 
-	// --- ESTADO LOCAL (Apenas para o Modal) ---
+	const store = useProjectsStore();
+
 	const showDeleteModal = ref(false);
 	const projectToDelete = ref<Project | null>(null);
 
-	// --- BUSCA INICIAL ---
 	onMounted(() => {
-		// Chama a action da store para buscar os projetos do Firebase
-		store.fetchProjects();
+		if (store.projects.length === 0) {
+			store.fetchProjects();
+		}
 	});
 
-	// --- LÓGICA DE BUSCA (Interação com a store) ---
-	// Computada para ler o parâmetro de busca da rota
-	const currentSearchTerm = computed(() => ((route.query.q as string) || '').toLowerCase());
-
-	// Observa mudanças no termo de busca da rota e atualiza a store
-	watch(
-		currentSearchTerm,
-		(newTerm) => {
-			store.setSearchTerm(newTerm); // Chama a action da store para atualizar o termo
-		},
-		{ immediate: true }
-	); // Executa imediatamente ao carregar
-
-	// --- HANDLERS DE EVENTOS (Chamando actions da store) ---
-
 	const handleToggleFavorite = async (projectId: string) => {
-		// Opcional: Adicionar feedback visual de loading/erro aqui
 		await store.toggleFavorite(projectId);
+		// Considerar adicionar feedback de UI (loading, sucesso/erro) se desejar
 	};
 
 	const promptDeleteProject = (projectId: string) => {
-		// Encontra o projeto na lista da store (usando o getter) para exibir o nome
-		projectToDelete.value = store.filteredAndSortedProjects.find((p) => p.id === projectId) || null;
+		projectToDelete.value = store.projects.find((p) => p.id === projectId) || null;
 		if (projectToDelete.value) {
 			showDeleteModal.value = true;
 		}
@@ -122,10 +105,9 @@
 
 	const confirmDeleteProject = async () => {
 		if (projectToDelete.value) {
-			// Opcional: Adicionar feedback visual de loading/erro aqui
 			await store.deleteProject(projectToDelete.value.id);
 		}
-		cancelDeleteProject(); // Fecha o modal
+		cancelDeleteProject();
 	};
 
 	const cancelDeleteProject = () => {
@@ -133,7 +115,3 @@
 		projectToDelete.value = null;
 	};
 </script>
-
-<style>
-	/* Estilos específicos se necessário */
-</style>
