@@ -11,7 +11,7 @@
 			<BaseButton
 				@click.stop="$emit('toggleFavorite', project.id)"
 				:class="[
-					'absolute top-2 right-2 p-1.5 rounded-full transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-yellow-500',
+					'absolute top-2 right-2 p-1.5 rounded-full transition-colors duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-500',
 					project.isFavorite
 						? 'bg-yellow-400 hover:bg-yellow-500 text-black'
 						: 'bg-gray hover:bg-yellow-300 text-black',
@@ -64,7 +64,7 @@
 			</div>
 
 			<div class="absolute bottom-2 right-2 group">
-				<BaseButton class="p-1 rounded-full hover:bg-gray-200 text-gray-500">
+				<BaseButton class="p-1 rounded-full cursor-pointer hover:bg-gray-200 text-gray-500">
 					<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
 						<path
 							d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
@@ -72,7 +72,7 @@
 					</svg>
 				</BaseButton>
 				<div
-					class="absolute right-0 bottom-full mb-1 w-32 bg-white rounded-md shadow-lg py-1 hidden group-hover:block group-focus-within:block z-10 ring-1 ring-black ring-opacity-5"
+					class="absolute right-0 bottom-full mb-1 w-32 bg-white rounded-md shadow-lg py-1 hidden group-focus-within:block z-10 ring-1 ring-black ring-opacity-5"
 				>
 					<NuxtLink
 						:to="`/projetos/editar/${project.id}`"

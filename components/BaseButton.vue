@@ -54,7 +54,7 @@
 			case 'danger':
 				return 'bg-red-600 hover:bg-red-700 text-white border-transparent focus:ring-red-500 px-4 py-2 shadow-sm';
 			case 'link':
-				return 'text-purple-700 underline px-1 py-1 border-transparent focus:ring-purple-700';
+				return 'text-purple-700 px-1 py-1 cursor-pointer border-transparent focus:ring-purple-700';
 			default:
 				return 'bg-purple-700 hover:bg-purple-600 text-white border-transparent focus:ring-purple-700 px-4 py-2 shadow-sm';
 		}
